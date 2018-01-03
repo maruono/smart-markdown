@@ -120,6 +120,7 @@ Cpm_tom = (function() {
     var i, j, key, num, ref;
     this.strdisp = new Disp("str");
     this.converter = new showdown.Converter();
+    this.converter.setOption('tables', 'true');
     this.cpm = new Cpm("memo_num");
     key = localStorage.getItem("memo_num");
     num = parseInt(key, 10);
@@ -254,12 +255,17 @@ Select_memo_disp = (function() {
     this.disp2 = new Disp("strtitle");
     this.disp2.disp("<h1>" + this.value3.title + "</h1>");
     this.converter = new showdown.Converter();
+    this.converter.setOption('tables', 'true');
+    this.converter.setOption('simpleLineBreaks', 'false');
+    this.converter.setOption('disableForced4SpacesIndentedSublists', 'true');
+    this.converter.setOption('smartIndentationFix', 'false');
+    this.converter.setOption('strikethrough', 'true');
     this.mark2html = this.converter.makeHtml(this.value3.memo);
     console.log("###########");
     console.log(this.mark2html);
     console.log("###########");
-    this.mark2html = this.mark2html.replace("<ul>", "");
-    this.mark2html = this.mark2html.replace("</ul>", "");
+    this.mark2html;
+    this.mark2html = this.mark2html.replace(/<ul>/g, "");
     this.mark2html = this.mark2html.replace("<ol>", "");
     this.mark2html = this.mark2html.replace("</ol>", "");
     console.log(this.mark2html);
@@ -450,40 +456,28 @@ Insert_caret = (function() {
 })();
 
 angular.module('starter.controllers', []).controller('DashCtrl', function($scope) {
-  var cpm, doAfter, sele, title_and_memo;
-  cpm = new Cpm("memumu");
-  sele = new Select_strage("key", "value");
-  title_and_memo = new Title_and_memo();
-  $("#delbut").click((function(_this) {
+  return $("#buttestok").click((function(_this) {
     return function() {
-      return new Delete_strage("delkey");
+      var converter, input_word, mark2html;
+      converter = new showdown.Converter();
+      converter.setOption('tables', 'true');
+      input_word = document.getElementById("memotest").value;
+      mark2html = converter.makeHtml(input_word);
+      console.log(mark2html);
+      return console.log($(':focus'));
     };
   })(this));
-  $("#butcreate").click((function(_this) {
-    return function() {
-      return title_and_memo.save();
-    };
-  })(this));
-  $scope.$on('$ionicView.enter', function(event, data) {
-    return console.log("入場時自動起動");
-  });
-  doAfter = function() {
-    var radionum;
-    radionum = localStorage.getItem("getradio");
-    return $("input[name=hoge]").val([radionum]);
-  };
-  return setTimeout(doAfter, 100);
 }).controller('TestCtrl', function($scope) {
   var area_auto_size, edit_memo;
   edit_memo = new Edit_memo();
   $("#insert_h2").click((function(_this) {
     return function() {
-      return new Insert_caret("memosd", "##");
+      return new Insert_caret("memosd", "## ");
     };
   })(this));
   $("#insert_yoko").click((function(_this) {
     return function() {
-      return new Insert_caret("memosd", "---");
+      return new Insert_caret("memosd", "\n---\n");
     };
   })(this));
   $("#insert_list").click((function(_this) {
@@ -493,7 +487,31 @@ angular.module('starter.controllers', []).controller('DashCtrl', function($scope
   })(this));
   $("#insert_hutoi").click((function(_this) {
     return function() {
-      return new Insert_caret("memosd", "- ");
+      return new Insert_caret("memosd", "**input**");
+    };
+  })(this));
+  $("#insert_bq").click((function(_this) {
+    return function() {
+      return new Insert_caret("memosd", "> ");
+    };
+  })(this));
+  $("#insert_strikethrough").click((function(_this) {
+    return function() {
+      return new Insert_caret("memosd", "~~ input ~~");
+    };
+  })(this));
+  $("#insert_home").click((function(_this) {
+    return function() {
+      var $text_area;
+      $text_area = $('#memosd');
+      $text_area.attr('selectionEnd', 0);
+      $text_area.attr('selectionStart', 0);
+      return $text_area.focus();
+    };
+  })(this));
+  $("#insert_end").click((function(_this) {
+    return function() {
+      return new Insert_caret("memosd", "~~ input ~~");
     };
   })(this));
   $('#memosd').css({

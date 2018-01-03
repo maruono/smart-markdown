@@ -87,6 +87,7 @@ class Cpm_tom
   constructor: ->
     @strdisp = new Disp("str")
     @converter = new showdown.Converter()
+    @converter.setOption('tables', 'true')
     @cpm = new Cpm("memo_num")
     
     key = localStorage.getItem("memo_num")
@@ -191,13 +192,21 @@ class Select_memo_disp
     @disp2.disp("<h1>#{@value3.title}</h1>")
     
     @converter = new showdown.Converter()
+    @converter.setOption('tables', 'true')
+    @converter.setOption('simpleLineBreaks', 'false')
+    @converter.setOption('disableForced4SpacesIndentedSublists', 'true')
+    @converter.setOption('smartIndentationFix', 'false')
+    @converter.setOption('strikethrough', 'true')
+    
+    
     @mark2html = @converter.makeHtml(@value3.memo)
     
     console.log "###########"
     console.log @mark2html
     console.log "###########"
-    @mark2html = @mark2html.replace("<ul>", "")
-    @mark2html = @mark2html.replace("</ul>", "")
+    @mark2html
+    @mark2html = @mark2html.replace(/<ul>/g, "")
+    #@mark2html = @mark2html.replace("</ul>", "")
     @mark2html = @mark2html.replace("<ol>", "")
     @mark2html = @mark2html.replace("</ol>", "")
     console.log @mark2html

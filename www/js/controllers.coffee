@@ -87,6 +87,7 @@ class Cpm_tom
   constructor: ->
     @strdisp = new Disp("str")
     @converter = new showdown.Converter()
+    @converter.setOption('tables', 'true')
     @cpm = new Cpm("memo_num")
     
     key = localStorage.getItem("memo_num")
@@ -191,13 +192,21 @@ class Select_memo_disp
     @disp2.disp("<h1>#{@value3.title}</h1>")
     
     @converter = new showdown.Converter()
+    @converter.setOption('tables', 'true')
+    @converter.setOption('simpleLineBreaks', 'false')
+    @converter.setOption('disableForced4SpacesIndentedSublists', 'true')
+    @converter.setOption('smartIndentationFix', 'false')
+    @converter.setOption('strikethrough', 'true')
+    
+    
     @mark2html = @converter.makeHtml(@value3.memo)
     
     console.log "###########"
     console.log @mark2html
     console.log "###########"
-    @mark2html = @mark2html.replace("<ul>", "")
-    @mark2html = @mark2html.replace("</ul>", "")
+    @mark2html
+    @mark2html = @mark2html.replace(/<ul>/g, "")
+    #@mark2html = @mark2html.replace("</ul>", "")
     @mark2html = @mark2html.replace("<ol>", "")
     @mark2html = @mark2html.replace("</ol>", "")
     console.log @mark2html
@@ -345,27 +354,15 @@ class Insert_caret
 
 angular.module('starter.controllers', [])
 .controller('DashCtrl', ($scope) ->
-  cpm = new Cpm("memumu")
-  sele = new Select_strage("key", "value")
-  title_and_memo = new Title_and_memo()
-  
-  $("#delbut").click =>
-    new Delete_strage("delkey")
-  
-  
-  
-  $("#butcreate").click =>
-    title_and_memo.save()
-  $scope.$on '$ionicView.enter', (event, data) ->
-    console.log "入場時自動起動"
-  
-  doAfter = ->
-    radionum = localStorage.getItem("getradio")
-    $("input[name=hoge]").val [radionum]
-  setTimeout(doAfter, 100)
-
+  $("#buttestok").click =>
+    converter = new showdown.Converter()
+    converter.setOption('tables', 'true')
+    input_word = document.getElementById("memotest").value
+    mark2html = converter.makeHtml(input_word)
+    console.log mark2html
     
-
+    
+    console.log $(':focus')
 )
 
 .controller('TestCtrl', ($scope) ->
@@ -373,16 +370,32 @@ angular.module('starter.controllers', [])
   edit_memo = new Edit_memo()
   
   $("#insert_h2").click =>
-    new Insert_caret("memosd", "##")
+    new Insert_caret("memosd", "## ")
   
   $("#insert_yoko").click =>
-    new Insert_caret("memosd", "---")
+    new Insert_caret("memosd", "\n---\n")
     
   $("#insert_list").click =>
     new Insert_caret("memosd", "- ")
     
   $("#insert_hutoi").click =>
-    new Insert_caret("memosd", "- ")
+    new Insert_caret("memosd", "**input**")
+    
+  $("#insert_bq").click =>
+    new Insert_caret("memosd", "> ")
+  
+  $("#insert_strikethrough").click =>
+    new Insert_caret("memosd", "~~ input ~~")
+
+  $("#insert_home").click =>
+    $text_area = $('#memosd')
+    $text_area.attr('selectionEnd', 0)
+    $text_area.attr('selectionStart', 0)
+    $text_area.focus()
+
+  
+  $("#insert_end").click =>
+    new Insert_caret("memosd", "~~ input ~~")
   
   $('#memosd').css
     "resize": "none"

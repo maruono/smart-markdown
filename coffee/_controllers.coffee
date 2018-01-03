@@ -2,27 +2,15 @@
 
 angular.module('starter.controllers', [])
 .controller('DashCtrl', ($scope) ->
-  cpm = new Cpm("memumu")
-  sele = new Select_strage("key", "value")
-  title_and_memo = new Title_and_memo()
-  
-  $("#delbut").click =>
-    new Delete_strage("delkey")
-  
-  
-  
-  $("#butcreate").click =>
-    title_and_memo.save()
-  $scope.$on '$ionicView.enter', (event, data) ->
-    console.log "入場時自動起動"
-  
-  doAfter = ->
-    radionum = localStorage.getItem("getradio")
-    $("input[name=hoge]").val [radionum]
-  setTimeout(doAfter, 100)
-
+  $("#buttestok").click =>
+    converter = new showdown.Converter()
+    converter.setOption('tables', 'true')
+    input_word = document.getElementById("memotest").value
+    mark2html = converter.makeHtml(input_word)
+    console.log mark2html
     
-
+    
+    console.log $(':focus')
 )
 
 .controller('TestCtrl', ($scope) ->
@@ -30,16 +18,32 @@ angular.module('starter.controllers', [])
   edit_memo = new Edit_memo()
   
   $("#insert_h2").click =>
-    new Insert_caret("memosd", "##")
+    new Insert_caret("memosd", "## ")
   
   $("#insert_yoko").click =>
-    new Insert_caret("memosd", "---")
+    new Insert_caret("memosd", "\n---\n")
     
   $("#insert_list").click =>
     new Insert_caret("memosd", "- ")
     
   $("#insert_hutoi").click =>
-    new Insert_caret("memosd", "- ")
+    new Insert_caret("memosd", "**input**")
+    
+  $("#insert_bq").click =>
+    new Insert_caret("memosd", "> ")
+  
+  $("#insert_strikethrough").click =>
+    new Insert_caret("memosd", "~~ input ~~")
+
+  $("#insert_home").click =>
+    $text_area = $('#memosd')
+    $text_area.attr('selectionEnd', 0)
+    $text_area.attr('selectionStart', 0)
+    $text_area.focus()
+
+  
+  $("#insert_end").click =>
+    new Insert_caret("memosd", "~~ input ~~")
   
   $('#memosd').css
     "resize": "none"
