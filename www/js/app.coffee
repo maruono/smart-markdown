@@ -51,5 +51,5 @@ angular.module 'starter', [
       templateUrl: 'templates/tab-account.html'
       controller: 'AccountCtrl'
     
-  $urlRouterProvider.otherwise '/tab/dash'
+  $urlRouterProvider.otherwise '/tab/account'
   return

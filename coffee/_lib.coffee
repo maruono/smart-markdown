@@ -313,6 +313,8 @@ class Area_auto_size
       $(@target_id).height 30
       $(@target_id).css 'lineHeight', '20px'
       $(@target_id).on 'input', (evt) ->
+        console.log "####evt = #{evt}"
+        console.log $('#memosd').focus()
         if evt.target.scrollHeight > evt.target.offsetHeight
           $(evt.target).height evt.target.scrollHeight
         else
@@ -323,6 +325,22 @@ class Area_auto_size
               $(evt.target).height evt.target.scrollHeight
               break
         return
+      
+  story1:->
+      $(@target_id).height 30
+      $(@target_id).css 'lineHeight', '20px'
+      console.log obj = $("#memosd").get(0)
+      if obj.scrollHeight > obj.offsetHeight
+          $(obj).height obj.scrollHeight
+      else
+        lineHeight = Number($(obj).css('lineHeight').split('px')[0])
+        loop
+          $(obj).height $(obj).height() - lineHeight
+          if obj.scrollHeight > obj.offsetHeight
+            $(obj).height obj.scrollHeight
+            break
+        return
+      
 ###########################
 class Delete_strage
   constructor:(@delkey) ->
@@ -348,3 +366,24 @@ class Insert_caret
       obj.val s.substr(0, p) + @str + s.substr(p)
       obj.get(0).setSelectionRange np, np
     return
+
+############################
+class End_and_home
+  constructor:() ->
+    
+  home:->
+    obj = $('#memotest').focus()
+    console.log obj.get(0).selectionStart
+    
+    t = document.getElementById('memosd')
+    len = t.value.length
+    t.focus()
+    t.setSelectionRange 0, 0
+    
+  end:->
+    $('#memotest').focus()
+    t = document.getElementById('memosd')
+    len = t.value.length
+    t.focus()
+    t.setSelectionRange len, len
+    
